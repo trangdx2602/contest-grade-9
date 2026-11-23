@@ -219,21 +219,31 @@ Cận trên của X: chọn `X = max(A) + (N−1)²`. Với X này, một phát 
 ### Bước 3: tính sát thương nhanh (100% điểm)
 Phát bắn ở `p` gây cho bia `i` sát thương `X − (i−p)²` nếu `(i−p)² < X`, còn lại thì gây 0. Gọi `w` là khoảng cách lớn nhất còn gây sát thương (`w² < X`). Như vậy chỉ các bia `p` trong cửa sổ `[i−w, i−1]` ảnh hưởng tới `i`.
 
-Sát thương tổng lên bia `i`:
+Gọi `d = i − p` là **khoảng cách** từ chỗ bắn `p` tới bia `i`. Sát thương tổng lên bia `i`:
 
 ```
-Σ c[p] · (X − (i − p)²)
-= Σ c[p] · (X − i² + 2·i·p − p²)
-= X·s0 − (i²·s0 − 2·i·s1 + s2)
+Σ c[p] · (X − d²)  =  X·s0 − t2
 ```
 
-với `s0 = Σ c[p]`, `s1 = Σ c[p]·p`, `s2 = Σ c[p]·p²`, lấy tổng trên cửa sổ.
+với ba tổng lấy trên các phát còn tác dụng:
+- `s0 = Σ c[p]` là tổng số phát;
+- `t1 = Σ c[p]·d`;
+- `t2 = Σ c[p]·d²`.
 
-Mỗi khi `i` tăng lên 1, cửa sổ trượt sang phải một ô:
-- **bỏ** bia `j = i − w − 1` ra khỏi ba tổng, vì bia này đã quá xa;
-- sau khi bắn ở `i`, **thêm** `c[i]` vào ba tổng.
+**Cập nhật khi chuyển từ bia `i−1` sang bia `i`:** mọi khoảng cách `d` tăng thêm 1. Vì `(d+1)² = d² + 2d + 1`, ta có:
+```
+t2 += 2·t1 + s0
+t1 += s0
+```
+Sau đó bỏ phát bắn ở `j = i − w − 1` ra khỏi ba tổng vì nó đã quá xa. Phát này đang ở khoảng cách `w + 1`:
+```
+s0 -= c[j];  t1 -= c[j]·(w+1);  t2 -= c[j]·(w+1)²
+```
+Nếu phải bắn vào bia `i` thì cộng `c[i]` vào `s0`. Phát này có khoảng cách `d = 0` nên `t1`, `t2` giữ nguyên.
 
 Nhờ vậy mỗi lần check chỉ mất **O(N)**. Tổng cộng khoảng N × log₂(4·10¹⁰) ≈ 2·10⁵ × 36 ≈ 7·10⁶ phép.
+
+**Vì sao không dùng vị trí `p` trực tiếp?** Khai triển `(i − p)² = i² − 2ip + p²` cũng ra công thức O(N). Khi đó phải giữ tổng `Σ c[p]·p²`, với `p` lên tới 2·10⁵ nên tổng này có thể tới khoảng 3·10¹⁹, **vượt `long long`**. Test 20 của bộ test bắt đúng trường hợp này. Còn khoảng cách `d` luôn ≤ √X, nên mọi giá trị trong cách trên chỉ cỡ 4·10¹⁰ và `long long` chứa thoải mái.
 
 ### Chạy tay ví dụ 1
 `A = [6, 7, 1, 3, 2, 1]` và K = 3, đánh số bia từ 0.
@@ -250,6 +260,17 @@ Nhờ vậy mỗi lần check chỉ mất **O(N)**. Tổng cộng khoảng N × 
 | 5 | 1 | 1·(5−4) = 1 | 0 | 0 | 3 |
 
 Tổng 3 phát, không quá K, nên X = 5 đạt ✓.
+
+Các giá trị `s0, t1, t2` trong lần chạy trên. Cột "Sát thương" là `5·s0 − t2`, đúng bằng cột "Sát thương nhận được" ở bảng trên:
+
+| i | Dịch khoảng cách | Bỏ phát ở j | s0 | t1 | t2 | Sát thương | Bắn thêm |
+|---|---|---|---|---|---|---|---|
+| 0 | – | – | 0 | 0 | 0 | 0 | 2, nên s0 = 2 |
+| 1 | t2 += 0+2, t1 += 2 | – | 2 | 2 | 2 | 10−2 = 8 | – |
+| 2 | t2 += 4+2, t1 += 2 | – | 2 | 4 | 8 | 10−8 = 2 | – |
+| 3 | t2 += 8+2, t1 += 2 | j = 0: bỏ 2 phát ở khoảng cách 3 | 0 | 0 | 0 | 0 | 1, nên s0 = 1 |
+| 4 | t2 += 0+1, t1 += 1 | – | 1 | 1 | 1 | 5−1 = 4 | – |
+| 5 | t2 += 2+1, t1 += 1 | – | 1 | 2 | 4 | 5−4 = 1 | – |
 
 **Thử X = 4** (w = 1):
 
@@ -271,6 +292,6 @@ Kiểm tra với ví dụ 2: `max(3+0, 7+1, 3+4) = 8` ✓.
 
 ### Lỗi hay gặp
 - X có thể lên tới khoảng 4·10¹⁰, nên phải dùng `long long`.
-- `s2 = Σ c[p]·p²` có thể lên tới khoảng 4·10¹⁹, **vượt cả `long long`**. Bản C++ phải dùng `__int128`, cần trình biên dịch g++ 64-bit. Python không gặp vấn đề này.
+- Nếu tính theo vị trí tuyệt đối `p` (tổng `Σ c[p]·p²`), số trung gian sẽ **vượt `long long`**. Phải tính theo khoảng cách `d` như trên. Python không bị tràn số nên không gặp lỗi này, nhưng Pascal và C++ thì có.
 - Tính `w` bằng `sqrt` số thực có thể bị lệch 1 đơn vị, nên cần chỉnh lại bằng vòng `while`.
 - Phải dừng ngay khi số phát vượt K, nếu không số phát có thể rất lớn và làm chương trình chậm đi.

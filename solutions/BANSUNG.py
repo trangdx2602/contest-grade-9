@@ -6,20 +6,23 @@ a = list(map(int, f.readline().split()))
 
 
 def check(x):
-    # ban o p anh huong toi i khi (i-p)^2 < x
+    # ban cach bia i mot khoang d gay x - d^2, chi co tac dung khi d <= w
     w = isqrt(x - 1)
     c = [0] * n
-    s0 = s1 = s2 = 0
+    s0 = t1 = t2 = 0    # tong c, c*d, c*d^2 cua cac phat con tac dung
     shots = 0
     for i in range(n):
-        j = i - w - 1
-        if j >= 0 and c[j]:
-            s0 -= c[j]
-            s1 -= c[j] * j
-            s2 -= c[j] * j * j
+        if i > 0:
+            # sang bia moi, moi khoang cach d tang len 1
+            t2 += 2 * t1 + s0
+            t1 += s0
+            j = i - w - 1
+            if j >= 0 and c[j]:
+                s0 -= c[j]
+                t1 -= c[j] * (w + 1)
+                t2 -= c[j] * (w + 1) * (w + 1)
 
-        # sum c[p] * (x - (i-p)^2)
-        rem = a[i] - (x * s0 - (i * i * s0 - 2 * i * s1 + s2))
+        rem = a[i] - (x * s0 - t2)
         if rem <= 0:
             continue
 
@@ -28,8 +31,6 @@ def check(x):
         if shots > k:
             return False
         s0 += c[i]
-        s1 += c[i] * i
-        s2 += c[i] * i * i
     return True
 
 

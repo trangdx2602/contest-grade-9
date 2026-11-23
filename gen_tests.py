@@ -4,7 +4,6 @@ import os, sys, shutil, subprocess
 from random import randint, choice, sample, shuffle, seed
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-seed(2026)
 
 
 def save(name, tests):
@@ -188,7 +187,9 @@ def bansung():
           "200000 1\n%s\n" % arr([10**9] * 200000)]
     t += [make(n, k, mx) for n, k, mx in [(200, 5, 1000), (1000, 1000, 10**9), (1000, 10, 10**9),
                                          (1000, 10**9, 10**9), (1000, 3, 100), (1000, 50, 1)]]
-    t += [make(200000, k, mx) for k, mx in [(10**9, 10**9), (200000, 10**9), (50, 10**9), (1000, 10)]]
+    t += [make(200000, k, mx) for k, mx in [(10**9, 10**9), (200000, 10**9), (50, 10**9)]]
+    # bia cuoi rat ben -> tinh theo vi tri tuyet doi (p^2 * c) se tran long long
+    t.append("200000 1000000000\n%s\n" % arr([1] * 199990 + [10**9] * 10))
     return [(x, bf_bansung if len(x) < 2000 else None) for x in t]
 
 
@@ -196,5 +197,6 @@ if __name__ == "__main__":
     probs = {"CHOXUAN": choxuan, "CANBANG": canbang, "KHOANGCACH": khoangcach,
              "XOADOAN": xoadoan, "BANSUNG": bansung}
     for name in sys.argv[1:] or probs:
+        seed(name)  # moi bai mot seed rieng, sinh le hay sinh het deu ra cung test
         shutil.rmtree(os.path.join(ROOT, "tests", name), ignore_errors=True)
         save(name, probs[name]())

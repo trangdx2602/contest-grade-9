@@ -5,33 +5,34 @@ int n;
 long long k, a[200005], c[200005];
 
 bool check(long long x) {
-    // ban o p anh huong toi i khi (i-p)^2 < x
+    // ban cach bia i mot khoang d gay x - d^2, chi co tac dung khi d <= w
     long long w = sqrt((double)x);
     while (w * w >= x) w--;
     while ((w + 1) * (w + 1) < x) w++;
 
-    __int128 s0 = 0, s1 = 0, s2 = 0;
+    long long s0 = 0, t1 = 0, t2 = 0;   // tong c, c*d, c*d^2 cua cac phat con tac dung
     long long shots = 0;
     for (int i = 0; i < n; i++) {
         c[i] = 0;
-        long long j = i - w - 1;
-        if (j >= 0) {
-            s0 -= c[j];
-            s1 -= (__int128)c[j] * j;
-            s2 -= (__int128)c[j] * j * j;
+        if (i > 0) {
+            // sang bia moi, moi khoang cach d tang len 1
+            t2 += 2 * t1 + s0;
+            t1 += s0;
+            long long j = i - w - 1;
+            if (j >= 0) {
+                s0 -= c[j];
+                t1 -= c[j] * (w + 1);
+                t2 -= c[j] * (w + 1) * (w + 1);
+            }
         }
 
-        // sum c[p] * (x - (i-p)^2)
-        __int128 dmg = x * s0 - ((__int128)i * i * s0 - 2 * i * s1 + s2);
-        __int128 rem = a[i] - dmg;
+        long long rem = a[i] - (x * s0 - t2);
         if (rem <= 0) continue;
 
         c[i] = (rem + x - 1) / x;
         shots += c[i];
         if (shots > k) return false;
         s0 += c[i];
-        s1 += (__int128)c[i] * i;
-        s2 += (__int128)c[i] * i * i;
     }
     return true;
 }

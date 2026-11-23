@@ -33,7 +33,7 @@ hsg_lop9/
 
 Chương trình đọc file `<TÊNBÀI>.INP` và ghi file `<TÊNBÀI>.OUT` trong **thư mục hiện tại**.
 
-**C++** (cần g++ 64-bit hỗ trợ `__int128`, ví dụ bản đi kèm Code::Blocks hoặc Dev-C++ mới):
+**C++** (g++ bất kì, ví dụ bản đi kèm Code::Blocks hoặc Dev-C++):
 ```bash
 g++ -O2 -std=c++17 BANSUNG.cpp -o BANSUNG
 ./BANSUNG

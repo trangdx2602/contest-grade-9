@@ -30,7 +30,6 @@ Lộ trình gợi ý:
 |---|---|---|
 | `int` | ±2,1·10⁹ | Đủ dùng khi số ≤ 10⁹ |
 | `long long` | ±9,2·10¹⁸ | Dùng khi số tới 10¹⁸ |
-| `__int128` | ±1,7·10³⁸ | Chỉ có trên g++ 64-bit |
 
 **Quy tắc:** nhân hoặc cộng hai số cỡ 10⁹ thì kết quả có thể vượt `int`, nên phải dùng `long long`.
 
@@ -46,7 +45,7 @@ Gặp trong đề:
 - Bài 1: `7K` tới 7·10⁹.
 - Bài 2: `A_i + K` tới 2·10⁹.
 - Bài 4: tổng tới 10¹⁴.
-- Bài 5: tổng `s2` tới 4·10¹⁹, cần `__int128`.
+- Bài 5: nếu đặt công thức theo vị trí tuyệt đối thì tổng trung gian tới khoảng 3·10¹⁹, vượt cả `long long`. Cách khắc phục là đặt công thức theo khoảng cách để các số luôn nhỏ. Khi số quá lớn, nên **đổi cách tính** thay vì tìm kiểu dữ liệu lớn hơn.
 
 ---
 
@@ -177,7 +176,7 @@ for (int i = 1; i <= n; i++) p[i] = p[i - 1] + a[i];
 
 **Biến thể "đếm cộng dồn":** `cnt[c][i]` là số lần chữ `c` xuất hiện trong `i` kí tự đầu. Mảng này cho biết ngay trong O(1) đoạn `[l, r]` có bao nhiêu chữ `c` (Bài 3).
 
-**Biến thể "tổng có trọng số":** cộng dồn `c[p]`, `c[p]·p`, `c[p]·p²` để tính nhanh các tổng dạng `Σ c[p]·(i−p)²` (Bài 5).
+**Biến thể "tổng có trọng số":** giữ đồng thời `Σ c`, `Σ c·d`, `Σ c·d²` để tính nhanh các tổng dạng `Σ c·(X − d²)` (Bài 5).
 
 Bài luyện: tổng đoạn con, đếm số đoạn có tổng bằng K, tổng hình chữ nhật trên mảng 2 chiều.
 
@@ -200,7 +199,7 @@ for (int r = 1; r <= n; r++) {
 }
 ```
 
-**Cửa sổ trượt kích thước cố định:** khi `r` tăng thì thêm `a[r]` vào, đồng thời bỏ `a[r − w]` ra. Bài 5 dùng cách này để giữ ba tổng `s0, s1, s2`.
+**Cửa sổ trượt kích thước cố định:** khi `r` tăng thì thêm `a[r]` vào, đồng thời bỏ `a[r − w]` ra. Bài 5 dùng cách này để giữ ba tổng `s0, t1, t2`.
 
 Gặp trong đề:
 - Bài 4, subtask `A_i ≥ 0` (60% số test).
@@ -269,7 +268,7 @@ Gặp trong đề: Bài 5.
 
 **Tối ưu mô phỏng:** khi mô phỏng quá chậm, tìm chỗ tính lặp đi lặp lại rồi thay bằng một trong các cách sau:
 - mảng cộng dồn hoặc mảng hiệu (cập nhật cả đoạn trong O(1));
-- khai triển công thức để tách phần phụ thuộc `i` ra khỏi tổng. Bài 5 khai triển `(i − p)² = i² − 2ip + p²`;
+- khai triển công thức để cập nhật tổng nhanh khi chuyển sang phần tử kế tiếp. Bài 5 dùng `(d + 1)² = d² + 2d + 1` để cập nhật tổng bình phương khoảng cách trong O(1);
 - cửa sổ trượt.
 
 ---
