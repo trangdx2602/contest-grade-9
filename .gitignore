@@ -1,0 +1,36 @@
+# file bien dich C++
+*.exe
+*.o
+*.obj
+solutions/CHOXUAN
+solutions/CANBANG
+solutions/KHOANGCACH
+solutions/XOADOAN
+solutions/BANSUNG
+
+# Code::Blocks / Dev-C++
+bin/
+obj/
+*.layout
+*.depend
+
+# Python
+__pycache__/
+*.pyc
+
+# input/output khi chay thu trong solutions (test that nam trong tests/)
+solutions/*.INP
+solutions/*.OUT
+solutions/*.inp
+solutions/*.out
+
+# bo test co the sinh lai bang gen_tests.py, bo comment neu khong muon commit
+# tests/
+
+# IDE, he dieu hanh
+.vscode/
+.idea/
+.claude/
+Thumbs.db
+desktop.ini
+.DS_Store
