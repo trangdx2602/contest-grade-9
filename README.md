@@ -13,6 +13,7 @@ Lời giải và bộ test cho đề thi chọn học sinh giỏi lớp 9 cấp 
 | 5 | Bắn súng | `BANSUNG` | 3 | ⭐⭐⭐⭐⭐ | Chặt nhị phân X + cửa sổ trượt |
 
 Tài liệu kèm theo:
+- Phân tích đề (ý nghĩa, mục tiêu, phương pháp từng bài, chiến thuật làm bài): **[docs/PHAN_TICH_DE.md](docs/PHAN_TICH_DE.md)**
 - Lời giải chi tiết từng bài, có chạy tay ví dụ và hướng làm từng subtask: **[solutions/LOI_GIAI.md](solutions/LOI_GIAI.md)**
 - Kiến thức nền tảng cần nắm, có code mẫu và lộ trình học: **[KIEN_THUC_NEN.md](KIEN_THUC_NEN.md)**
 
@@ -21,6 +22,8 @@ Tài liệu kèm theo:
 ```
 hsg_lop9/
 ├── docs/              Ảnh đề thi (4 trang)
+│   ├── PHAN_TICH_DE.md    Phân tích tổng quan đề, chiến thuật làm bài
+│   └── baiX_*.md          Đề bài + phân tích từng bài (5 file)
 ├── solutions/         Lời giải: mỗi bài có bản .cpp và .py
 │   └── LOI_GIAI.md    Giải thích chi tiết
 ├── KIEN_THUC_NEN.md   Kiến thức nền tảng
